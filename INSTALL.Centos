@@ -6,3 +6,14 @@ mkdir -p /var/log/scripts/backup
 
 crontab -e
 0 4 * * * /root/scripts/vestacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1
+
+
+Optional mydumper setup
+yum install git glib2-devel mysql-devel zlib-devel pcre-devel openssl-devel cmake gcc-c++ -y 
+mkdir -p ~/src/ && cd  ~/src/
+git clone https://github.com/maxbube/mydumper
+cd mydumper
+cmake .
+make
+make install 
+
