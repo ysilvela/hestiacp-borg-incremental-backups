@@ -28,7 +28,7 @@ IFS=', ' read -r -a EXCLUDED_USERS <<< "$EXCLUDED_USERS"
 COUNT=0
 
 for USER_DIR in $HOME_DIR/* ; do
-  if [ -d "$USER_DIR" ]; then
+  if [ -d "$USER_DIR" ] && [ "$BACKUP_DIR" != "$USER_DIR" ]; then
     USER=$(basename $USER_DIR)
 
     echo "$(date +'%F %T') ########## Processing user $USER ##########"
@@ -54,6 +54,8 @@ for USER_DIR in $HOME_DIR/* ; do
     echo "$USER_DIR/drush-backups" >> $EXCLUDE
     echo "$USER_DIR/tmp" >> $EXCLUDE
     echo "$USER_DIR/.cache" >> $EXCLUDE
+    
+    
 
     # Exclude drupal and wordpress cache dirs
     for WEB_DIR in $USER_DIR/web/* ; do
