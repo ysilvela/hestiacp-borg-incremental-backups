@@ -13,6 +13,7 @@ fi
 
 DB=$1
 DB_FILE=$2
+DB_DIR=$3
 
 # Check if database and database file exist
 
@@ -21,8 +22,8 @@ if ! [ $DBEXISTS -eq 0 ]; then
   echo "!!!!! Database $DB does not exists. Aborting..."               
   exit 1
 fi
-if [ -z $DB_FILE ]; then
-  echo "!!!!! Database file $DB_FILE not found. Aborting..."      
+if [ -e $DB_FILE ] && [ ! -d "$DB_DIR/$DB" ] ; then
+  echo "!!!!! Database file $DB_FILE or DB Mydumper DIR not found. Aborting..."      
   exit 1
 fi
 
@@ -32,9 +33,16 @@ mysqladmin -f drop $DB
 echo "-- Creating database $DB"
 mysql -e "CREATE DATABASE IF NOT EXISTS $DB"
 
-echo "-- Importing $DB_FILE to $DB database"
-if [[ $DB_FILE = *".gz"* ]]; then
-  gunzip < $DB_FILE | mysql $DB
+echo "-- Importing $DB_FILE or $DB_DIR/$DB to $DB database"
+if [ -d "$DB_DIR/$DB" ]; then
+  echo "-- Importing $DB_DIR/$DB to $DB database"
+  myloader --threads=1 --overwrite-tables --directory=$DB_DIR/$DB --database=$DB
 else
-  mysql $DB < $DB_FILE
+  echo "-- Importing $DB_FILE to $DB database"
+  if [[ $DB_FILE = *".gz"* ]]; then
+    gunzip < $DB_FILE | mysql $DB
+  else
+    mysql $DB < $DB_FILE
+  fi
 fi
+

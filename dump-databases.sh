@@ -16,8 +16,15 @@ while read USER ; do
   rm -f $DESTINATION/*
   # Get databases
   while read DATABASE ; do
-    mysqldump $DATABASE --opt --routines | gzip > $DESTINATION/$DATABASE.sql.gz
-    echo "$(date +'%F %T') -- $DATABASE > $DESTINATION/$DATABASE.sql.gz"
+    
+    if [ -e "/usr/local/bin/mydumper" ] || [ -e "/usr/bin/mydumper" ]; 
+      then
+        mkdir -p $DESTINATION/$DATABASE
+        mydumper -v 1 --triggers --events --routines --no-locks --less-locking --rows=1000 --threads=1 --compress --database=$DATABASE --outputdir=$DESTINATION/$DATABASE
+      else
+        mysqldump $DATABASE --opt --routines | gzip > $DESTINATION/$DATABASE.sql.gz
+        echo "$(date +'%F %T') -- $DATABASE > $DESTINATION/$DATABASE.sql.gz"
+    fi
     # Fix permissions
     chown -R $USER:$USER $DESTINATION
     let DB_COUNT++

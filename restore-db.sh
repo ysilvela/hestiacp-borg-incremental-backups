@@ -89,7 +89,7 @@ if [ ! -f "$DB_FILE" ]; then
   echo "!!!!! Database $DB file is not present in backup archive $TIME. Aborting..."
   exit 1
 else
-  $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE
+  $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE $DB_DIR
 fi
 
 echo "----- Cleaning temp dir"
