@@ -64,6 +64,21 @@ for USER_DIR in $HOME_DIR/* ; do
         fi
       fi
     done
+    
+    # Exclude bitrix cache dirs
+    for WEB_DIR in $USER_DIR/web/* ; do
+      if [ -d "$WEB_DIR/$PUBLIC_HTML_DIR_NAME" ]; then
+        find $WEB_DIR/$PUBLIC_HTML_DIR_NAME -maxdepth 2 -type d -name "cache" | grep "wp-content/cache" >> $EXCLUDE
+        if [ -d "$WEB_DIR/$PUBLIC_HTML_DIR_NAME/bitrix/cache" ]; then
+          echo "$WEB_DIR/$PUBLIC_HTML_DIR_NAME/bitrix/cache/*" >> $EXCLUDE
+          echo "$WEB_DIR/$PUBLIC_HTML_DIR_NAME/bitrix/managed_cache/*" >> $EXCLUDE
+          echo "$WEB_DIR/$PUBLIC_HTML_DIR_NAME/bitrix/html_pages/*/*" >> $EXCLUDE
+          echo "$WEB_DIR/$PUBLIC_HTML_DIR_NAME/bitrix/backup/*" >> $EXCLUDE
+          echo "$WEB_DIR/$PUBLIC_HTML_DIR_NAME/upload/resize_cache/*" >> $EXCLUDE
+        fi
+      fi
+    done
+    
 
     # Set user borg repo path
     USER_REPO=$REPO_USERS_DIR/$USER
