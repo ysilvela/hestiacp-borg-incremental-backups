@@ -27,6 +27,7 @@ I use Debian 9. I did not test it in other distros, but i think you should not f
 ## Requirements
 * Vesta CP running
 * Borg backup
+* mydumper (optional)
 
 ### 1- Borg install
 ```
@@ -40,7 +41,7 @@ To install the script collection run the following commands as root:
 ```
 mkdir -p /root/scripts
 cd /root/scripts
-git clone https://github.com/ramirojoaquin/vestacp-borg-incremental-backups.git
+git clone https://github.com/akunich/vestacp-borg-incremental-backups
 ```
 
 ### 3- Create directory to store logs:
@@ -58,6 +59,9 @@ And add the following cronjob:
 0 4 * * * /root/scripts/vestacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1
 ```
 This cronjob will run `backup-execute.sh` every day at 4am. You can change the hour and the log locations.
+
+### 5- Setup Mydumper (Optional)
+https://github.com/maxbube/mydumper
 
 # Scripts details
 
