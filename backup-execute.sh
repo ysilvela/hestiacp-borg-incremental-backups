@@ -11,7 +11,7 @@ START_TIME=`date +%s`
 EXCLUDE=$CURRENT_DIR/exclude
 
 # Set backup archive name to current day
-ARCHIVE=$(date +'%F')
+ARCHIVE=$(date +'%F--%H-%M')
 
 ### Start processing ###
 
