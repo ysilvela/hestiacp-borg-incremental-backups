@@ -118,6 +118,9 @@ rsync -za --delete --omit-dir-times $BACKUP_USER_DIR/ $USER_DIR/
 echo "-- Fixing web permissions"
 chown -R $USER:$USER $USER_DIR/web
 
+echo "----- Crontabs restore"
+crontab -u /home/$USER/conf/crontabs.data
+
 echo "----- Checking if there are databases to restore"
 v-list-databases $USER | cut -d " " -f1 | awk '{if(NR>2)print}' | while read DB ; do
   # Check if there is a backup for the db

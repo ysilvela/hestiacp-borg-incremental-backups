@@ -11,7 +11,7 @@ START_TIME=`date +%s`
 EXCLUDE=$CURRENT_DIR/exclude
 
 # Set backup archive name to current day
-ARCHIVE=$(date +'%F')
+ARCHIVE=$(date +'%F--%H-%M')
 
 ### Start processing ###
 
@@ -54,8 +54,6 @@ for USER_DIR in $HOME_DIR/* ; do
     echo "$USER_DIR/drush-backups" >> $EXCLUDE
     echo "$USER_DIR/tmp" >> $EXCLUDE
     echo "$USER_DIR/.cache" >> $EXCLUDE
-    
-    
 
     # Exclude drupal and wordpress cache dirs
     for WEB_DIR in $USER_DIR/web/* ; do
@@ -84,6 +82,11 @@ for USER_DIR in $HOME_DIR/* ; do
 
     # Set user borg repo path
     USER_REPO=$REPO_USERS_DIR/$USER
+    
+    # copy crontabs in userdir
+    if [ -e "/var/spool/cron/$USER" ]; then
+      cp -af /var/spool/cron/$USER /home/$USER/conf/crontabs.data 
+    fi
 
     # Check if repo was initialized, if its not we perform borg init
     if ! [ -d "$USER_REPO/data" ]; then
