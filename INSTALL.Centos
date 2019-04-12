@@ -1,3 +1,4 @@
+localectl set-locale LANG=en_US.utf8
 yum install borgbackup git -y 
 mkdir -p /root/scripts
 cd /root/scripts
