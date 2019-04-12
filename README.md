@@ -32,7 +32,7 @@ I use Debian 9. I did not test it in other distros, but i think you should not f
 ### 1- Borg install
 ```
 apt update
-apt install borgbackup
+apt install borgbackup git -y
 ```
 
 ### 2- Install the scripts
