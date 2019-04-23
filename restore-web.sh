@@ -97,7 +97,11 @@ if [ -z "$(ls -A $BACKUP_WEB_DIR)" ]; then
 fi
 
 echo "-- Restoring files from temp dir to $WEB_DIR"
-rsync -za --delete $BACKUP_WEB_DIR/ $WEB_DIR/
+# rsync -za --delete $BACKUP_WEB_DIR/ $WEB_DIR/
+rm -rf $WEB_DIR
+cd $BACKUP_WEB_DIR/..
+mv $PUBLIC_HTML_DIR_NAME $HOME_DIR/$USER/web/$WEB/
+
 
 echo "-- Fixing permissions"
 chown -R $USER:$USER $WEB_DIR/
@@ -126,10 +130,10 @@ if [ $4 ]; then
   done
 fi
 
-echo "----- Cleaning temp dir"
-if [ -d "$TEMP_DIR" ]; then
-  rm -rf $TEMP_DIR/*
-fi
+# echo "----- Cleaning temp dir"
+# if [ -d "$TEMP_DIR" ]; then
+#   rm -rf $TEMP_DIR/*
+# fi
 
 echo
 echo "$(date +'%F %T') ########## WEB $WEB OWNED BY $USER RESTORE COMPLETED ##########"
