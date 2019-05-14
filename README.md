@@ -56,7 +56,7 @@ crontab -e
 ```
 And add the following cronjob:
 ```
-0 4 * * * /root/scripts/vestacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1
+0 0 * * * sleep `shuf -i 1-14400 -n 1` && /root/scripts/vestacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1
 ```
 This cronjob will run `backup-execute.sh` every day at 4am. You can change the hour and the log locations.
 
