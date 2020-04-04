@@ -21,7 +21,8 @@ USER="bitrix"
       if [ -e "/usr/local/bin/mydumper" ] || [ -e "/usr/bin/mydumper" ]; 
         then
           mkdir -p $DESTINATION/$DATABASE
-          mydumper -v 1 --triggers --events --routines --no-locks --less-locking --rows=10000 --threads=1 --compress --database=$DATABASE --outputdir=$DESTINATION/$DATABASE
+#           mydumper -v 1 --triggers --events --routines --no-locks --less-locking --rows=10000 --threads=1 --compress --database=$DATABASE --outputdir=$DESTINATION/$DATABASE
+          mydumper -v 1 --triggers --events --routines --trx-consistency-only --rows=10000 --threads=1 --compress --build-empty-files --database=$DATABASE --outputdir=$DESTINATION/$DATABASE
         else
           # Clean destination
           rm -f $DESTINATION/*
