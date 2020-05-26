@@ -85,7 +85,7 @@ for USER_DIR in $HOME_DIR/* ; do
     
     # copy crontabs in userdir
     if [ -e "/var/spool/cron/$USER" ]; then
-      cp -af /var/spool/cron/$USER /home/$USER/conf/crontabs.data 
+      cp -af /var/spool/cron/$USER /home/$USER/crontabs.data 
     fi
 
     # Check if repo was initialized, if its not we perform borg init
