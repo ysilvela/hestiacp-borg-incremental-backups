@@ -85,12 +85,13 @@ BACKUP_DB_DIR="${DB_DIR:1}"
 borg extract --list $USER_REPO::$TIME $BACKUP_DB_DIR
 # Check that the files have been restored correctly
 DB_FILE=$BACKUP_DB_DIR/$DB.sql.gz
-if [ ! -f "$DB_FILE" ]; then
-  echo "!!!!! Database $DB file is not present in backup archive $TIME. Aborting..."
-  exit 1
-else
-  $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE $DB_DIR
-fi
+$CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE $DB_DIR
+# if [ ! -f "$DB_FILE" ]; then
+#   echo "!!!!! Database $DB file is not present in backup archive $TIME. Aborting..."
+#   exit 1
+# else
+#   $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE $DB_DIR
+# fi
 
 echo "----- Cleaning temp dir"
 if [ -d "$TEMP_DIR" ]; then

@@ -52,6 +52,7 @@ for USER_DIR in $HOME_DIR/* ; do
     # Build exclusion list
     # No need for drush backups, tmp folder and .cache dir
     echo "$USER_DIR/drush-backups" >> $EXCLUDE
+    echo "$USER_DIR/backups" >> $EXCLUDE
     echo "$USER_DIR/tmp" >> $EXCLUDE
     echo "$USER_DIR/.cache" >> $EXCLUDE
 
