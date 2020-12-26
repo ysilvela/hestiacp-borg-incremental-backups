@@ -3,7 +3,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source $CURRENT_DIR/config.ini
 
 # This script will restore a web domain from incremental backup
-USAGE='tar-user.sh user 2018-03-25'
+USAGE='mount-user-backup user [date]'
 
 # Assign arguments
 TIME=$2
