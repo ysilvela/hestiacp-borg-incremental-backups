@@ -1,5 +1,6 @@
 #!/bin/bash
 # перед запуском настраиваем параметры доступа к хранилищу ssh и обязательно должна уже быть настроена аутентификация по ssh ключам
+# ssh-keygen -t rsa 
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source $CURRENT_DIR/config.ini
