@@ -3,7 +3,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source $CURRENT_DIR/config.ini
 
 # This script will restore a web domain from incremental backup
-USAGE="restore-web.sh 2018-03-25 user domain.com database"
+USAGE="./restore-web.sh 2018-03-25 username domain.com [database]"
 
 # Assign arguments
 TIME=$1
@@ -27,6 +27,8 @@ if [[ -z $1 || -z $2 || -z $3 ]]; then
   echo "---"
   echo "Usage example:"
   echo $USAGE
+  echo "or"
+  echo "./restore-web.sh list username domain.com"
   exit 1
 fi
 
@@ -114,11 +116,7 @@ if [ $4 ]; then
       borg extract --list $USER_REPO::$TIME $BACKUP_DB_DIR
       # Check that the files have been restored correctly
       DB_FILE=$BACKUP_DB_DIR/$DB.sql.gz
-      if [ ! -f "$DB_FILE" ]; then
-        echo "!!!!! Database $DB files are not present in backup archive $TIME. Aborting database restoration..."
-      else
-        $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE
-      fi
+      $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE $DB_DIR
     else
       echo "!!!!! Database $DB not found under selected user. User $USER has the following databases:"
       v-list-databases $USER | cut -d " " -f1 | awk '{if(NR>2)print}'
