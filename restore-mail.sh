@@ -52,10 +52,6 @@ if [ ! -d "$HOME_DIR/$USER/mail/$DOMAIN" ]; then
   exit 1
 fi
 
-if [ ! -d "$USER_REPO/data" ]; then
-  echo "!!!!! User $USER has no backup repository or no backup has been executed yet. Aborting..."
-  exit 1
-fi
 
 if ! borg list $USER_REPO | grep -q $TIME; then
   echo "!!!!! Backup archive $TIME not found, the following are available:"

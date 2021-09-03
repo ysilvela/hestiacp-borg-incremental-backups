@@ -29,11 +29,7 @@ if [[ -z $1 || -z $2 ]]; then
   exit 1
 fi
 
-# Check if user repo exist
-if [ ! -d "$USER_REPO/data" ]; then
-  echo "!!!!! User $USER has no backup repository or no backup has been executed yet. Aborting..."
-  exit 1
-fi
+
 
 # Check if backup archive date exist in user repo
 if ! borg list $USER_REPO | grep -q $TIME; then
