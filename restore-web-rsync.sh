@@ -19,6 +19,7 @@ mkdir -p $TEMP_DIR
 
 # Set user repository
 USER_REPO=$REPO_USERS_DIR/$USER
+USER_DIR="/home/$USER"
 
 ##### Validations #####
 
@@ -76,30 +77,27 @@ then
   exit 1
 fi
 
+
+# монтируем папку с бекапом, если не примонтирована
+echo "----- Mount backup dir"
+mkdir -p $USER_DIR/backups/$TIME
+isMounted=`mount | grep borgfs | grep $USER_DIR/backups/$TIME`
+if [ -z "$isMounted" ] ; then
+  if ! borg mount $USER_REPO::$TIME $USER_DIR/backups/$TIME ; then
+      echo "Borg mount failed. Try use restore-web.sh"
+      exit 2
+  fi
+fi
+ 
+
 # Set dir paths
 WEB_DIR=$HOME_DIR/$USER/web/$WEB/$PUBLIC_HTML_DIR_NAME
-BACKUP_WEB_DIR="${WEB_DIR:1}"
+BACKUP_WEB_DIR=$USER_DIR/backups/$TIME$HOME_DIR/$USER/web/$WEB/$PUBLIC_HTML_DIR_NAME
+echo $BACKUP_WEB_DIR
 
-echo "-- Restoring web domain files from backup $USER_REPO::$TIME to temp dir"
-cd $TEMP_DIR
-borg extract --list $USER_REPO::$TIME $BACKUP_WEB_DIR
-
-# Check that the files have been restored correctly
-if [ ! -d "$BACKUP_WEB_DIR" ]; then
-  echo "!!!!! $WEB is not present in backup archive $TIME. Aborting..."
-  exit 1
-fi
-if [ -z "$(ls -A $BACKUP_WEB_DIR)" ]; then
-  echo "!!!!! $WEB restored directory is empty, Aborting..."
-  exit 1
-fi
-
-echo "-- Restoring files from temp dir to $WEB_DIR"
-# rsync -za --delete $BACKUP_WEB_DIR/ $WEB_DIR/
-rm -rf $WEB_DIR
-cd $BACKUP_WEB_DIR/..
-mv $PUBLIC_HTML_DIR_NAME $HOME_DIR/$USER/web/$WEB/
-
+echo "-- Rsync files start"
+rsync -v -a --numeric-ids --delete $BACKUP_WEB_DIR/ $WEB_DIR/
+echo "-- Rsync files finish"
 
 echo "-- Fixing permissions"
 chown -R $USER:$USER $WEB_DIR/
@@ -111,12 +109,13 @@ if [ $4 ]; then
   v-list-databases $USER | cut -d " " -f1 | awk '{if(NR>2)print}' | while read DATABASE ; do
     if [ "$DB" == "$DATABASE" ]; then
       echo "-- Restoring database $DB from backup $USER_REPO::$TIME"
-      DB_DIR=$HOME_DIR/$USER/$DB_DUMP_DIR_NAME
-      BACKUP_DB_DIR="${DB_DIR:1}"
-      borg extract --list $USER_REPO::$TIME $BACKUP_DB_DIR
+      DB_DIR=$USER_DIR/backups/$TIME$HOME_DIR/$USER/$DB_DUMP_DIR_NAME
       # Check that the files have been restored correctly
-      DB_FILE=$BACKUP_DB_DIR/$DB.sql.gz
+      DB_FILE=$DB_DIR/$DB.sql.gz
+      mv -f $WEB_DIR/.htaccess $WEB_DIR/.htaccess.backup
+      echo "Deny From All" > $WEB_DIR/.htaccess
       $CURRENT_DIR/inc/db-restore.sh $DB $DB_FILE $DB_DIR
+      mv -f $WEB_DIR/.htaccess.backup $WEB_DIR/.htaccess
     else
       echo "!!!!! Database $DB not found under selected user. User $USER has the following databases:"
       v-list-databases $USER | cut -d " " -f1 | awk '{if(NR>2)print}'
@@ -124,10 +123,8 @@ if [ $4 ]; then
   done
 fi
 
-echo "----- Cleaning temp dir"
-if [ -d "$TEMP_DIR" ]; then
-  rm -rf $TEMP_DIR/*
-fi
+echo "----- Umount backup dir"
+borg umount $USER_DIR/backups/$TIME
 
 echo
 echo "$(date +'%F %T') ########## WEB $WEB OWNED BY $USER RESTORE COMPLETED ##########"
