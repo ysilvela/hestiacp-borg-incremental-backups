@@ -23,7 +23,7 @@ USER_DIR="/home/$USER"
 
 ##### Validations #####
 
-if [[ -z $1 || -z $2 || -z $3 ]]; then
+if [[ -z $1 || -z $2 ]] || [[ $1 != "list" && -z $3 ]]; then
   echo "!!!!! This script needs at least 3 arguments. Backup date, user name and web domain. Dadabase is optional"
   echo "---"
   echo "Usage example:"
