@@ -41,7 +41,7 @@ To install the script collection run the following commands as root:
 ```
 mkdir -p /root/scripts
 cd /root/scripts
-git clone https://github.com/akunich/hestiacp-borg-incremental-backups
+git clone https://github.com/andyg2/hestiacp-borg-incremental-backups
 ```
 
 ### 3- Create directory to store logs:
