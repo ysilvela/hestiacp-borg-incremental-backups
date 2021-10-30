@@ -13,9 +13,9 @@ START_TIME=`date +%s`
 
 # Set dir paths
 USER_DIR=$HOME_DIR/$USER
-VESTA_USER_DIR=$VESTA_DIR/data/users/$USER
+HESTIA_USER_DIR=$HESTIA_DIR/data/users/$USER
 ARCHIVE_USER_DIR=$ARCHIVE_DIR/$USER
-ARCHIVE_VESTA_USER_DIR=$ARCHIVE_USER_DIR/vesta/$USER
+ARCHIVE_HESTIA_USER_DIR=$ARCHIVE_USER_DIR/hestia/$USER
 
 ##### Validations #####
 
@@ -33,9 +33,9 @@ if [ ! -d "$USER_DIR" ]; then
   exit 1
 fi
 
-# Check if user exist in vesta dir
-if [ ! -d "$VESTA_USER_DIR" ]; then
-  echo "!!!!! User $USER doest not exist in vesta directory."
+# Check if user exist in hestia dir
+if [ ! -d "$HESTIA_USER_DIR" ]; then
+  echo "!!!!! User $USER doest not exist in hestia directory."
   exit 1
 fi
 
@@ -92,10 +92,10 @@ fi
 
 # Archive dir creation
 mkdir -p $ARCHIVE_USER_DIR
-mkdir -p $ARCHIVE_VESTA_USER_DIR
+mkdir -p $ARCHIVE_HESTIA_USER_DIR
 
-echo "-- Saving vesta config files for user $USER from $VESTA_USER_DIR to $ARCHIVE_VESTA_USER_DIR"
-rsync -za $VESTA_USER_DIR/ $ARCHIVE_VESTA_USER_DIR/
+echo "-- Saving hestia config files for user $USER from $HESTIA_USER_DIR to $ARCHIVE_HESTIA_USER_DIR"
+rsync -za $HESTIA_USER_DIR/ $ARCHIVE_HESTIA_USER_DIR/
 
 echo "-- Saving user files from $USER_DIR to $ARCHIVE_USER_DIR"
 rsync -za $USER_DIR/ $ARCHIVE_USER_DIR/

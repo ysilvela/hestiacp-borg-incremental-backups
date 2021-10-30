@@ -1,8 +1,8 @@
-# Vesta Control Panel Borg Incremental Backups
-A series of bash scripts to perform incremental backups of Vesta Control Panel users and server config, using Borg Backup as backend.
+# Hestia Control Panel Borg Incremental Backups
+A series of bash scripts to perform incremental backups of Hestia Control Panel users and server config, using Borg Backup as backend.
 
 ### The problem
-Vesta CP provides by default a backup system, this backup system creates a tar for each user every day (by default 10 copies are saved), But this way of making backups has some disadvantages when you have a lot of users:
+Hestia CP provides by default a backup system, this backup system creates a tar for each user every day (by default 10 copies are saved), But this way of making backups has some disadvantages when you have a lot of users:
 * Server overload. Earch time the backup is run, a complete copy of user files are saved.
 * Disk space consumption. Each backup copy contains a full backup of the user files. So its very easy to run out of disk space.
 
@@ -13,7 +13,7 @@ Borg Backup does an excellent job making incremental backups. And provide very i
 You can get more info at https://www.borgbackup.org/
 
 # How the script collection works
-The main backup script is designed to be run every day via cronjob. This script saves a snapshot of all users, server config and vesta directory into different Borg repositories.
+The main backup script is designed to be run every day via cronjob. This script saves a snapshot of all users, server config and hestia directory into different Borg repositories.
 
 This borg repositories are saved in `/backup` by default, organized in folders.
 
@@ -25,7 +25,7 @@ Additionally, it is possible to archive users who are no longer active (they are
 I use Debian 9. I did not test it in other distros, but i think you should not find any major problem.
 
 ## Requirements
-* Vesta CP running
+* Hestia CP running
 * Borg backup
 * mydumper (optional)
 
@@ -41,7 +41,7 @@ To install the script collection run the following commands as root:
 ```
 mkdir -p /root/scripts
 cd /root/scripts
-git clone https://github.com/akunich/vestacp-borg-incremental-backups
+git clone https://github.com/akunich/hestiacp-borg-incremental-backups
 ```
 
 ### 3- Create directory to store logs:
@@ -56,7 +56,7 @@ crontab -e
 ```
 And add the following cronjob:
 ```
-0 0 * * * /bin/sleep `/usr/bin/shuf -i 1-14400 -n 1` && /root/scripts/vestacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1
+0 0 * * * /bin/sleep `/usr/bin/shuf -i 1-14400 -n 1` && /root/scripts/hestiacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1
 ```
 This cronjob will run `backup-execute.sh` every day at 4am. You can change the hour and the log locations.
 
@@ -71,7 +71,7 @@ The main backup script `./backup-execute.sh` is designed to be run every day via
 * Dump all databases to the corresponding user dirs. Using the following format `/home/userdir/db_dump/database.sql.gz`
 * Creates an incremental backup archive/point of all the users, using one repository per user . Repos are stored in `/backup/borg/home/USER`
 * Creates an incremental backup archive/point of config dir `/etc` and save the repo in `/backup/borg/etc`
-* Creates an incremental backup archive/point of vesta directory `/usr/local/vesta` and save the repo in `/backup/borg/vesta`
+* Creates an incremental backup archive/point of hestia directory `/usr/local/hestia` and save the repo in `/backup/borg/hestia`
 * Creates an incremental backup archive/point of custom scripts `/root/scripts` and save the repo in `/backup/borg/scripts`
 * Sync backup folder with a second remote server if needed.
 
@@ -82,7 +82,7 @@ If no backup was executed yet, the script will initialize the corresponding borg
 The name of the backup point/archive is set in the following format:
 `2018-05-20` (year-month-day)
 
-Vesta CLI commands are used to obtain all the information.
+Hestia CLI commands are used to obtain all the information.
 
 ### Dump databases
 `./dump-databases.sh`

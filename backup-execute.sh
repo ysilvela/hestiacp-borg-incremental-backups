@@ -141,16 +141,16 @@ echo "-- Cleaning old backup archives"
 borg prune $OPTIONS_PRUNE $REPO_ETC
 echo
 
-echo "$(date +'%F %T') ########## Executing Vesta dir backup: $VESTA_DIR ##########"
-# if ! [ -d "$REPO_VESTA/data" ]; then
-#   echo "-- No repo found. Initializing new borg repository $REPO_VESTA"
-#   mkdir -p $REPO_VESTA
-  borg init $OPTIONS_INIT $REPO_VESTA
+echo "$(date +'%F %T') ########## Executing Hestia dir backup: $HESTIA_DIR ##########"
+# if ! [ -d "$REPO_HESTIA/data" ]; then
+#   echo "-- No repo found. Initializing new borg repository $REPO_HESTIA"
+#   mkdir -p $REPO_HESTIA
+  borg init $OPTIONS_INIT $REPO_HESTIA
 # fi
-echo "-- Creating new backup archive $REPO_VESTA::$ARCHIVE"
-borg create $OPTIONS_CREATE $REPO_VESTA::$ARCHIVE $VESTA_DIR
+echo "-- Creating new backup archive $REPO_HESTIA::$ARCHIVE"
+borg create $OPTIONS_CREATE $REPO_HESTIA::$ARCHIVE $HESTIA_DIR
 echo "-- Cleaning old backup archives"
-borg prune $OPTIONS_PRUNE $REPO_VESTA
+borg prune $OPTIONS_PRUNE $REPO_HESTIA
 echo
 
 # if [[ ! -z "$REMOTE_BACKUP_SERVER" && ! -z "$REMOTE_BACKUP_SERVER_DIR" ]]; then

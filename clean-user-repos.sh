@@ -62,9 +62,9 @@ do
   ARCHIVE_USER_DIR=$ARCHIVE_DIR/$USER
   USER_DIR=$HOME_DIR/$USER
   BACKUP_USER_DIR="${USER_DIR:1}"
-  VESTA_USER_DIR=$VESTA_DIR/data/users/$USER
-  BACKUP_VESTA_USER_DIR="${VESTA_USER_DIR:1}"
-  ARCHIVE_VESTA_USER_DIR=$ARCHIVE_USER_DIR/vesta
+  HESTIA_USER_DIR=$HESTIA_DIR/data/users/$USER
+  BACKUP_HESTIA_USER_DIR="${HESTIA_USER_DIR:1}"
+  ARCHIVE_HESTIA_USER_DIR=$ARCHIVE_USER_DIR/hestia
 
   if [ -f "$ARCHIVE_USER_DIR.tar.gz" ]; then
     echo "!!!!! User archive file $ARCHIVE_USER_DIR.tar.gz already exist."
@@ -100,17 +100,17 @@ do
 
   echo "-- Creating archive user dir $ARCHIVE_USER_DIR"
   mkdir -p $ARCHIVE_USER_DIR
-  mkdir -p $ARCHIVE_VESTA_USER_DIR
+  mkdir -p $ARCHIVE_HESTIA_USER_DIR
   cd $TEMP_DIR
 
-  echo "-- Extracting Vesta user $USER files from backup $REPO_VESTA::$LAST_BACKUP_ARCHIVE to temp dir"
-  borg extract --list $REPO_VESTA::$LAST_BACKUP_ARCHIVE $BACKUP_VESTA_USER_DIR
+  echo "-- Extracting Hestia user $USER files from backup $REPO_HESTIA::$LAST_BACKUP_ARCHIVE to temp dir"
+  borg extract --list $REPO_HESTIA::$LAST_BACKUP_ARCHIVE $BACKUP_HESTIA_USER_DIR
   # Check that the files have been restored correctly
-  if [ ! -d "$BACKUP_VESTA_USER_DIR" ]; then
-    echo "!!!!! Vesta user config files for $USER are not present in backup archive $LAST_BACKUP_ARCHIVE."
+  if [ ! -d "$BACKUP_HESTIA_USER_DIR" ]; then
+    echo "!!!!! Hestia user config files for $USER are not present in backup archive $LAST_BACKUP_ARCHIVE."
   fi
-  if [ -z "$(ls -A $BACKUP_VESTA_USER_DIR)" ]; then
-    echo "!!!!! Vesta user config files restored directory for $USER is empty."
+  if [ -z "$(ls -A $BACKUP_HESTIA_USER_DIR)" ]; then
+    echo "!!!!! Hestia user config files restored directory for $USER is empty."
   fi
 
   echo "-- Extracting last backup $USER_REPO::$LAST_BACKUP_ARCHIVE to temp dir"
@@ -128,7 +128,7 @@ do
 
   echo "-- Moving user files from temp dir to $ARCHIVE_USER_DIR"
   mv $BACKUP_USER_DIR/* $ARCHIVE_USER_DIR
-  mv $BACKUP_VESTA_USER_DIR $ARCHIVE_VESTA_USER_DIR
+  mv $BACKUP_HESTIA_USER_DIR $ARCHIVE_HESTIA_USER_DIR
 
   echo "-- Compressing $ARCHIVE_USER_DIR to $ARCHIVE_DIR/$USER.tar.gz"
   cd $ARCHIVE_DIR

@@ -33,6 +33,6 @@ wget https://github.com/maxbube/mydumper/releases/download/v0.9.5/mydumper-0.9.5
 rpm -Uvh mydumper-0.9.5-2.el6.x86_64.rpm
 
 mkdir -p /var/log/scripts/backup 
-crontab -l | { cat; echo '0 0 * * * /bin/sleep `/usr/bin/shuf -i 1-14400 -n 1` && /root/scripts/vestacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1'; } | crontab -
+crontab -l | { cat; echo '0 0 * * * /bin/sleep `/usr/bin/shuf -i 1-14400 -n 1` && /root/scripts/hestiacp-borg-incremental-backups/backup-execute.sh > /var/log/scripts/backup/backup_`date "+\%Y-\%m-\%d"`.log 2>&1'; } | crontab -
 
 

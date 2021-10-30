@@ -40,16 +40,16 @@ if ! borg list $USER_REPO | grep -q $TIME; then
   exit 1
 fi
 
-# Check if vesta repo exist
-if [ ! -d "$REPO_VESTA/data" ]; then
-  echo "!!!!! Vesta has no backup repository or no backup has been executed yet. Aborting..."
+# Check if hestia repo exist
+if [ ! -d "$REPO_HESTIA/data" ]; then
+  echo "!!!!! Hestia has no backup repository or no backup has been executed yet. Aborting..."
   exit 1
 fi
 
-# Check if backup archive date exist in vesta repo
-if ! borg list $REPO_VESTA | grep -q $TIME; then
-  echo "!!!!! Backup archive $TIME not found in Vesta repo, the following are available:"
-  borg list $REPO_VESTA
+# Check if backup archive date exist in hestia repo
+if ! borg list $REPO_HESTIA | grep -q $TIME; then
+  echo "!!!!! Backup archive $TIME not found in Hestia repo, the following are available:"
+  borg list $REPO_HESTIA
   echo "Usage example:"
   echo $USAGE
   exit 1
@@ -69,30 +69,30 @@ fi
 
 # Set dir paths
 USER_DIR=$HOME_DIR/$USER
-VESTA_USER_DIR=$VESTA_DIR/data/users/$USER
+HESTIA_USER_DIR=$HESTIA_DIR/data/users/$USER
 BACKUP_USER_DIR="${USER_DIR:1}"
-BACKUP_VESTA_USER_DIR="${VESTA_USER_DIR:1}"
+BACKUP_HESTIA_USER_DIR="${HESTIA_USER_DIR:1}"
 
 cd $TEMP_DIR
 
-echo "----- Restoring Vesta user files from backup $REPO_VESTA::$TIME to temp dir"
-borg extract --list $REPO_VESTA::$TIME $BACKUP_VESTA_USER_DIR
+echo "----- Restoring Hestia user files from backup $REPO_HESTIA::$TIME to temp dir"
+borg extract --list $REPO_HESTIA::$TIME $BACKUP_HESTIA_USER_DIR
 
 # Check that the files have been restored correctly
-if [ ! -d "$BACKUP_VESTA_USER_DIR" ]; then
-  echo "!!!!! Vesta user config files for $USER are not present in backup archive $TIME. Aborting..."
+if [ ! -d "$BACKUP_HESTIA_USER_DIR" ]; then
+  echo "!!!!! Hestia user config files for $USER are not present in backup archive $TIME. Aborting..."
   exit 1
 fi
-if [ -z "$(ls -A $BACKUP_VESTA_USER_DIR)" ]; then
-  echo "!!!!! Vesta user config files restored directory for $USER is empty, Aborting..."
+if [ -z "$(ls -A $BACKUP_HESTIA_USER_DIR)" ]; then
+  echo "!!!!! Hestia user config files restored directory for $USER is empty, Aborting..."
   exit 1
 fi
 
-echo "-- Restoring vesta config files for user $USER from temp dir to $VESTA_USER_DIR"
-mkdir -p $VESTA_USER_DIR
-rsync -za --delete $BACKUP_VESTA_USER_DIR/ $VESTA_USER_DIR/
+echo "-- Restoring hestia config files for user $USER from temp dir to $HESTIA_USER_DIR"
+mkdir -p $HESTIA_USER_DIR
+rsync -za --delete $BACKUP_HESTIA_USER_DIR/ $HESTIA_USER_DIR/
 
-echo "-- Vesta rebuild user"
+echo "-- Hestia rebuild user"
 v-rebuild-user $USER
 
 echo "----- Restoring user files from backup $USER_REPO::$TIME to temp dir"
@@ -131,7 +131,7 @@ v-list-databases $USER | cut -d " " -f1 | awk '{if(NR>2)print}' | while read DB 
   fi
 done
 
-echo "-- Vesta rebuild user"
+echo "-- Hestia rebuild user"
 v-rebuild-user $USER
 
 echo "----- Cleaning temp dir"
